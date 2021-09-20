@@ -2,11 +2,11 @@
 
 
 
-import React, { Component } from "react"
+import React from "react"
 import Sketch from "react-p5"
 
 export default function Fretboard(){
-    const frets = 22
+    const frets = 23
     const fretboardHeigth = 200
 
     // fretboardWidth = window.innerWidth
@@ -17,7 +17,7 @@ export default function Fretboard(){
     const stringSpinShadow = "#222222"
     const nutColor = "white"
     const fretsColor = "#A6A6A6"
-    const noteColor = "red"
+    const noteColor = "gray"
     const electricGuitarStrings = true
     const neckColor = "#534441"
     const tuning = ["e", "b", "g", "d", "a", "e"]
@@ -31,10 +31,25 @@ export default function Fretboard(){
     const magic = parseFloat(mn)
     const fretHeigth = fretboardHeigth / numberOfStrings
 
+
+    const fretSizeCalculator = (scale, magic_constant, numberOfFrets) => {
+        let fretMesures = []
+        let acumulatedFretSize = scale / magic_constant
+        fretMesures.push(acumulatedFretSize)
+        for(let i= 1; i<numberOfFrets; i++) {
+            let mesure = (scale - acumulatedFretSize ) / magic_constant
+            fretMesures.push(mesure)
+            acumulatedFretSize += mesure
+        }
+        console.log({fretMesures})
+        
+    }
+    
     let fr1 = scale / magic
     let fr2 = (scale - fr1) / magic
     let fr3 = (scale - (fr1 + fr2)) / magic
     let fr4 = (scale - (fr1 + fr2 + fr3)) / magic
+    console.log("fr4:", fr4 , fretSizeCalculator(scale, magic, 23))
     let fr5 = (scale - (fr1 + fr2 + fr3 + fr4)) / magic
     let fr6 =
         (scale - (fr1 + fr2 + fr3 + fr4 + fr5)) /
@@ -361,7 +376,9 @@ export default function Fretboard(){
         p5.background(neckColor)
 
         p5.noLoop()
+
     }
+    
     let draw = p5 => {
         // p5.translate(-p5.width / 2, -p5.height / 2, 0)
 
@@ -402,7 +419,7 @@ export default function Fretboard(){
             p5.noStroke()
         }
 
-        function drawNotes(
+        function drawNote(
             noteColor,
             positionHeigth,
             positionWidth,
@@ -648,7 +665,7 @@ export default function Fretboard(){
                     fretWidth = fr24
                 }
 
-                drawNotes(
+                drawNote(
                     noteColor,
                     positionHeigth,
                     positionWidth,
@@ -665,6 +682,6 @@ export default function Fretboard(){
     }
 
     
-return <Sketch setup={setup} draw={draw} />
+return <Sketch setup={setup} draw={draw} style={{textAlign: 'center'}}/>
     
 }
