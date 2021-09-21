@@ -32,338 +32,21 @@ export default function Fretboard(){
     const fretHeigth = fretboardHeigth / numberOfStrings
 
 
-    const fretSizeCalculator = (scale, magic_constant, numberOfFrets) => {
+    const fretSizeCalculator = (scale, magic_constant, frets) => {
         let fretMesures = []
         let acumulatedFretSize = scale / magic_constant
         fretMesures.push(acumulatedFretSize)
-        for(let i= 1; i<numberOfFrets; i++) {
+        for(let i= 1; i<frets; i++) {
             let mesure = (scale - acumulatedFretSize ) / magic_constant
             fretMesures.push(mesure)
             acumulatedFretSize += mesure
         }
-        console.log({fretMesures})
+        
+        return fretMesures
         
     }
-    
-    let fr1 = scale / magic
-    let fr2 = (scale - fr1) / magic
-    let fr3 = (scale - (fr1 + fr2)) / magic
-    let fr4 = (scale - (fr1 + fr2 + fr3)) / magic
-    console.log("fr4:", fr4 , fretSizeCalculator(scale, magic, 23))
-    let fr5 = (scale - (fr1 + fr2 + fr3 + fr4)) / magic
-    let fr6 =
-        (scale - (fr1 + fr2 + fr3 + fr4 + fr5)) /
-        magic
-    let fr7 =
-        (scale -
-            (fr1 + fr2 + fr3 + fr4 + fr5 + fr6)) /
-        magic
-    let fr8 =
-        (scale -
-            (fr1 +
-                fr2 +
-                fr3 +
-                fr4 +
-                fr5 +
-                fr6 +
-                fr7)) /
-        magic
-    let fr9 =
-        (scale -
-            (fr1 +
-                fr2 +
-                fr3 +
-                fr4 +
-                fr5 +
-                fr6 +
-                fr7 +
-                fr8)) /
-        magic
-    let fr10 =
-        (scale -
-            (fr1 +
-                fr2 +
-                fr3 +
-                fr4 +
-                fr5 +
-                fr6 +
-                fr7 +
-                fr8 +
-                fr9)) /
-        magic
-    let fr11 =
-        (scale -
-            (fr1 +
-                fr2 +
-                fr3 +
-                fr4 +
-                fr5 +
-                fr6 +
-                fr7 +
-                fr8 +
-                fr9 +
-                fr10)) /
-        magic
-    let fr12 =
-        (scale -
-            (fr1 +
-                fr2 +
-                fr3 +
-                fr4 +
-                fr5 +
-                fr6 +
-                fr7 +
-                fr8 +
-                fr9 +
-                fr10 +
-                fr11)) /
-        magic
-    let fr13 =
-        (scale -
-            (fr1 +
-                fr2 +
-                fr3 +
-                fr4 +
-                fr5 +
-                fr6 +
-                fr7 +
-                fr8 +
-                fr9 +
-                fr10 +
-                fr11 +
-                fr12)) /
-        magic
-    let fr14 =
-        (scale -
-            (fr1 +
-                fr2 +
-                fr3 +
-                fr4 +
-                fr5 +
-                fr6 +
-                fr7 +
-                fr8 +
-                fr9 +
-                fr10 +
-                fr11 +
-                fr12 +
-                fr13)) /
-        magic
-    let fr15 =
-        (scale -
-            (fr1 +
-                fr2 +
-                fr3 +
-                fr4 +
-                fr5 +
-                fr6 +
-                fr7 +
-                fr8 +
-                fr9 +
-                fr10 +
-                fr11 +
-                fr12 +
-                fr13 +
-                fr14)) /
-        magic
-    let fr16 =
-        (scale -
-            (fr1 +
-                fr2 +
-                fr3 +
-                fr4 +
-                fr5 +
-                fr6 +
-                fr7 +
-                fr8 +
-                fr9 +
-                fr10 +
-                fr11 +
-                fr12 +
-                fr13 +
-                fr14 +
-                fr15)) /
-        magic
-    let fr17 =
-        (scale -
-            (fr1 +
-                fr2 +
-                fr3 +
-                fr4 +
-                fr5 +
-                fr6 +
-                fr7 +
-                fr8 +
-                fr9 +
-                fr10 +
-                fr11 +
-                fr12 +
-                fr13 +
-                fr14 +
-                fr15 +
-                fr16)) /
-        magic
-    let fr18 =
-        (scale -
-            (fr1 +
-                fr2 +
-                fr3 +
-                fr4 +
-                fr5 +
-                fr6 +
-                fr7 +
-                fr8 +
-                fr9 +
-                fr10 +
-                fr11 +
-                fr12 +
-                fr13 +
-                fr14 +
-                fr15 +
-                fr16 +
-                fr17)) /
-        magic
-    let fr19 =
-        (scale -
-            (fr1 +
-                fr2 +
-                fr3 +
-                fr4 +
-                fr5 +
-                fr6 +
-                fr7 +
-                fr8 +
-                fr9 +
-                fr10 +
-                fr11 +
-                fr12 +
-                fr13 +
-                fr14 +
-                fr15 +
-                fr16 +
-                fr17 +
-                fr18)) /
-        magic
-    let fr20 =
-        (scale -
-            (fr1 +
-                fr2 +
-                fr3 +
-                fr4 +
-                fr5 +
-                fr6 +
-                fr7 +
-                fr8 +
-                fr9 +
-                fr10 +
-                fr11 +
-                fr12 +
-                fr13 +
-                fr14 +
-                fr15 +
-                fr16 +
-                fr17 +
-                fr18 +
-                fr19)) /
-        magic
-    let fr21 =
-        (scale -
-            (fr1 +
-                fr2 +
-                fr3 +
-                fr4 +
-                fr5 +
-                fr6 +
-                fr7 +
-                fr8 +
-                fr9 +
-                fr10 +
-                fr11 +
-                fr12 +
-                fr13 +
-                fr14 +
-                fr15 +
-                fr16 +
-                fr17 +
-                fr18 +
-                fr19 +
-                fr20)) /
-        magic
-    let fr22 =
-        (scale -
-            (fr1 +
-                fr2 +
-                fr3 +
-                fr4 +
-                fr5 +
-                fr6 +
-                fr7 +
-                fr8 +
-                fr9 +
-                fr10 +
-                fr11 +
-                fr12 +
-                fr13 +
-                fr14 +
-                fr15 +
-                fr16 +
-                fr17 +
-                fr18 +
-                fr19 +
-                fr20 +
-                fr21)) /
-        magic
-    let fr23 =
-        (scale -
-            (fr1 +
-                fr2 +
-                fr3 +
-                fr4 +
-                fr5 +
-                fr6 +
-                fr7 +
-                fr8 +
-                fr9 +
-                fr10 +
-                fr11 +
-                fr12 +
-                fr13 +
-                fr14 +
-                fr15 +
-                fr16 +
-                fr17 +
-                fr18 +
-                fr19 +
-                fr20 +
-                fr21 +
-                fr22)) /
-        magic
-    let fr24 =
-        (scale -
-            (fr1 +
-                fr2 +
-                fr3 +
-                fr4 +
-                fr5 +
-                fr6 +
-                fr7 +
-                fr8 +
-                fr9 +
-                fr10 +
-                fr11 +
-                fr12 +
-                fr13 +
-                fr14 +
-                fr15 +
-                fr16 +
-                fr17 +
-                fr18 +
-                fr19 +
-                fr20 +
-                fr21 +
-                fr22 +
-                fr23)) /
-        magic
+    let fretSizes = fretSizeCalculator(scale, magic, frets)
+
 
     let setup = (p5, canvasParentRef) => {
         p5.createCanvas(
@@ -463,84 +146,14 @@ export default function Fretboard(){
         let positionHeigth = fretHeigth
 
         for (var i = 0; i < numberOfStrings; i += 1) {
-            // let positionWidth = fr1
+            
             let positionWidth = 0
             let fretNumber = 0
 
-            for (var e = 0; e < frets + 1; e += 1) {
-                let fretWidth = fr1
-                if (e === 1) {
-                    fretWidth = fr2
-                }
-                if (e === 2) {
-                    fretWidth = fr3
-                }
-                if (e === 3) {
-                    fretWidth = fr4
-                }
-                if (e === 4) {
-                    fretWidth = fr5
-                }
-                if (e === 5) {
-                    fretWidth = fr6
-                }
-                if (e === 6) {
-                    fretWidth = fr7
-                }
-                if (e === 7) {
-                    fretWidth = fr8
-                }
-                if (e === 8) {
-                    fretWidth = fr9
-                }
-                if (e === 9) {
-                    fretWidth = fr10
-                }
-                if (e === 10) {
-                    fretWidth = fr11
-                }
-                if (e === 11) {
-                    fretWidth = fr12
-                }
-                if (e === 12) {
-                    fretWidth = fr13
-                }
-                if (e === 13) {
-                    fretWidth = fr14
-                }
-                if (e === 14) {
-                    fretWidth = fr15
-                }
-                if (e === 15) {
-                    fretWidth = fr16
-                }
-                if (e === 16) {
-                    fretWidth = fr17
-                }
-                if (e === 17) {
-                    fretWidth = fr18
-                }
-                if (e === 18) {
-                    fretWidth = fr19
-                }
-                if (e === 19) {
-                    fretWidth = fr20
-                }
-                if (e === 20) {
-                    fretWidth = fr21
-                }
-                if (e === 21) {
-                    fretWidth = fr22
-                }
-                if (e === 22) {
-                    fretWidth = fr23
-                }
-                if (e === 23) {
-                    fretWidth = fr24
-                }
-                lastFretWidth = fretWidth
+            for (var e = 0; e < frets; e++) {
+                lastFretWidth = fretSizes[e]
                 drawFrets(
-                    fretWidth,
+                    fretSizes[e],
                     positionWidth,
                     positionHeigth,
                     fretHeigth,
@@ -552,10 +165,10 @@ export default function Fretboard(){
 
                 // NECK DOTS
                 if (dots) {
-                    drawDots(fretboardHeigth, fretNumber, positionWidth, fretWidth)
+                    drawDots(fretboardHeigth, fretNumber, positionWidth, fretSizes[e])
                 }
 
-                positionWidth += fretWidth
+                positionWidth += fretSizes[e]
                 fretNumber += 1
             }
 
@@ -593,88 +206,17 @@ export default function Fretboard(){
             let positionWidth = 0
             // console.log("this", this["fr" + i])
             for (var e = 0; e < frets + 1; e += 1) {
-                let fretWidth = fr1
-
-                if (e === 1) {
-                    fretWidth = fr2
-                }
-                if (e === 2) {
-                    fretWidth = fr3
-                }
-                if (e === 3) {
-                    fretWidth = fr4
-                }
-                if (e === 4) {
-                    fretWidth = fr5
-                }
-                if (e === 5) {
-                    fretWidth = fr6
-                }
-                if (e === 6) {
-                    fretWidth = fr7
-                }
-                if (e === 7) {
-                    fretWidth = fr8
-                }
-                if (e === 8) {
-                    fretWidth = fr9
-                }
-                if (e === 9) {
-                    fretWidth = fr10
-                }
-                if (e === 10) {
-                    fretWidth = fr11
-                }
-                if (e === 11) {
-                    fretWidth = fr12
-                }
-                if (e === 12) {
-                    fretWidth = fr13
-                }
-                if (e === 13) {
-                    fretWidth = fr14
-                }
-                if (e === 14) {
-                    fretWidth = fr15
-                }
-                if (e === 15) {
-                    fretWidth = fr16
-                }
-                if (e === 16) {
-                    fretWidth = fr17
-                }
-                if (e === 17) {
-                    fretWidth = fr18
-                }
-                if (e === 18) {
-                    fretWidth = fr19
-                }
-                if (e === 19) {
-                    fretWidth = fr20
-                }
-                if (e === 20) {
-                    fretWidth = fr21
-                }
-                if (e === 21) {
-                    fretWidth = fr22
-                }
-                if (e === 22) {
-                    fretWidth = fr23
-                }
-                if (e === 23) {
-                    fretWidth = fr24
-                }
-
+                
                 drawNote(
                     noteColor,
                     positionHeigth,
                     positionWidth,
-                    fretWidth,
+                    fretSizes[e],
                     fretHeigth,
                     lastFretWidth - 3
                 )
 
-                positionWidth += fretWidth
+                positionWidth += fretSizes[e]
             }
 
             positionHeigth += fretHeigth
