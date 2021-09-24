@@ -3,14 +3,19 @@
 
 
 import React from "react"
+import { useState, useEffect } from "react"
+import PropTypes from 'prop-types';
 import Sketch from "react-p5"
 
-export default function Fretboard(){
-    const frets = 23
+const Fretboard = ({props,numberOfFrets, ...args}) =>{
+    const [frets, setFrets] = useState(numberOfFrets);
+   
+     // This will only run when one of those variables change
     const fretboardHeigth = 200
 
     // fretboardWidth = window.innerWidth
-    const fretboardWidth = '1500'
+    // const fretboardWidth = '1500'
+    const [fretboardWidth, setFretboardWidth] = useState(1500);
     const numberOfStrings = 6
     const stringSpinColor = "#E9E3DF"
     const firstStringsSpinColor = "#A6A6A6"
@@ -30,9 +35,21 @@ export default function Fretboard(){
     const scale = parseFloat(sc)
     const magic = parseFloat(mn)
     const fretHeigth = fretboardHeigth / numberOfStrings
-
-
+    // useEffect(() => {
+    //     setFrets(numberOfFrets)
+    //     fretSizes = fretSizeCalculator(scale, magic, frets)
+    //     setFretboardWidth(fretSizes[1])
+    //     console.log("2st fretboardWidth:", fretboardWidth)
+            
+        
+    //     console.log("ARGS:", numberOfFrets, frets, fretSizes[1])
+    // }, [numberOfFrets])
+    useEffect(() => {
+        
+       
+     }, [])
     const fretSizeCalculator = (scale, magic_constant, frets) => {
+     
         let fretMesures = []
         let acumulatedFretSize = scale / magic_constant
         fretMesures.push(acumulatedFretSize)
@@ -42,15 +59,20 @@ export default function Fretboard(){
             acumulatedFretSize += mesure
         }
         
-        return fretMesures
+        return  [ fretMesures, acumulatedFretSize ]
         
     }
     let fretSizes = fretSizeCalculator(scale, magic, frets)
-
-
+    
+   
     let setup = (p5, canvasParentRef) => {
+        let correctFretboardSize = 0
+        fretSizes[0].forEach (function(numero){
+            correctFretboardSize += numero;
+        });
+         
         p5.createCanvas(
-            fretboardWidth - fretboardWidth / 3.6,
+            correctFretboardSize ,
             fretboardHeigth
             // p5.windowWidth / 8,
             // p5.windowHeight / 5.9
@@ -59,13 +81,13 @@ export default function Fretboard(){
         p5.background(neckColor)
 
         p5.noLoop()
-
+        
     }
     
     let draw = p5 => {
         // p5.translate(-p5.width / 2, -p5.height / 2, 0)
 
-        function drawFrets(
+        function drawFret(
             x,
             y,
             z,
@@ -142,39 +164,44 @@ export default function Fretboard(){
         }
 
         // NOTE: Do not use setState in draw function or in functions that is executed in draw function... pls use normal variables or class properties for this purposes
+        function fretboardDraw(){
+            let positionHeigth = fretHeigth
 
-        let positionHeigth = fretHeigth
+            for (var i = 0; i < numberOfStrings; i += 1) {
+                
+                let positionWidth = 0
+                let fretNumber = 0
 
-        for (var i = 0; i < numberOfStrings; i += 1) {
-            
-            let positionWidth = 0
-            let fretNumber = 0
+                for (var e = 0; e < frets; e++) {
+                    lastFretWidth = fretSizes[0][e]
+                    drawFret(
+                        fretSizes[0][e],
+                        positionWidth,
+                        positionHeigth,
+                        fretHeigth,
+                        fretboardHeigth,
+                        fretNumber,
+                        nutColor,
+                        fretsColor
+                    )
 
-            for (var e = 0; e < frets; e++) {
-                lastFretWidth = fretSizes[e]
-                drawFrets(
-                    fretSizes[e],
-                    positionWidth,
-                    positionHeigth,
-                    fretHeigth,
-                    fretboardHeigth,
-                    fretNumber,
-                    nutColor,
-                    fretsColor
-                )
+                    // NECK DOTS
+                    if (dots) {
+                        drawDots(fretboardHeigth, fretNumber, positionWidth, fretSizes[0][e])
+                    }
 
-                // NECK DOTS
-                if (dots) {
-                    drawDots(fretboardHeigth, fretNumber, positionWidth, fretSizes[e])
+                    positionWidth += fretSizes[0][e]
+                    fretNumber += 1
                 }
 
-                positionWidth += fretSizes[e]
-                fretNumber += 1
+                positionHeigth += fretHeigth
             }
 
-            positionHeigth += fretHeigth
         }
-        positionHeigth = fretHeigth
+        fretboardDraw()
+      
+
+        let positionHeigth = fretHeigth
         //INSTRUMENT STRINGS
         for (var i = 0; i < numberOfStrings; i += 1) {
             p5.fill(stringSpinShadow)
@@ -211,19 +238,33 @@ export default function Fretboard(){
                     noteColor,
                     positionHeigth,
                     positionWidth,
-                    fretSizes[e],
+                    fretSizes[0][e],
                     fretHeigth,
                     lastFretWidth - 3
                 )
 
-                positionWidth += fretSizes[e]
+                positionWidth += fretSizes[0][e]
             }
 
             positionHeigth += fretHeigth
         }
+        
+        console.log("SIZE:", fretboardWidth, fretSizes[1])
+       
     }
+  
+    
 
     
-return <Sketch setup={setup} draw={draw} style={{textAlign: 'center'}}/>
+return <Sketch setup={setup} draw={draw} style={{textAlign: 'center'}} />
     
 }
+Fretboard.propTypes = {
+    numberOfFrets: PropTypes.number
+}
+Fretboard.defaultProps = {
+    numberOfFrets: 23,
+    
+  };
+export default Fretboard
+
