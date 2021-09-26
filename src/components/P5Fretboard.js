@@ -20,7 +20,7 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
     const stringSpinColor = "#E9E3DF"
     const firstStringsSpinColor = "#A6A6A6"
     const stringSpinShadow = "#222222"
-    const nutColor = "white"
+    const nutColor = "#E3E5E5"
     const fretsColor = "#A6A6A6"
     const noteColor = "gray"
     const electricGuitarStrings = true
@@ -72,21 +72,20 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
         });
          
         p5.createCanvas(
-            correctFretboardSize ,
+            correctFretboardSize + fretSizes[0][fretSizes[0].length - 1] ,
             fretboardHeigth
-            // p5.windowWidth / 8,
-            // p5.windowHeight / 5.9
-            // ,p5.WEBGL
         ).parent(canvasParentRef) // use parent to render canvas in this ref (without that p5 render this canvas outside your component)
+        
         p5.background(neckColor)
 
         p5.noLoop()
+        // p5.translate(1000,0)
+        
         
     }
     
     let draw = p5 => {
-        // p5.translate(-p5.width / 2, -p5.height / 2, 0)
-
+     
         function drawFret(
             x,
             y,
@@ -110,9 +109,15 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
             let squareColor = p5.color("black")
             squareColor.setAlpha(100)
             // p5.noStroke()
+
             if (fretNumber === 0) {
+                
+                
+                p5.fill('white')
+                p5.rect(y - fretSizes[0][fretSizes[0].length - 1], 0, fretSizes[0][fretSizes[0].length -1], fretboardHeigth)
                 p5.fill(nutColor)
-                p5.rect(y, 0, 10, fretboardHeigth)
+                p5.rect(y , 0, 10, fretboardHeigth)
+              
             } else {
                 p5.fill(fretsColor)
                 p5.rect(y, 0, 3, fretboardHeigth)
@@ -169,14 +174,14 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
 
             for (var i = 0; i < numberOfStrings; i += 1) {
                 
-                let positionWidth = 0
+                let positionWidth = lastFretWidth
                 let fretNumber = 0
 
                 for (var e = 0; e < frets; e++) {
                     lastFretWidth = fretSizes[0][e]
                     drawFret(
                         fretSizes[0][e],
-                        positionWidth,
+                        positionWidth ,
                         positionHeigth,
                         fretHeigth,
                         fretboardHeigth,
@@ -230,18 +235,30 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
 
         positionHeigth = fretHeigth
         for (var i = 0; i < numberOfStrings; i += 1) {
-            let positionWidth = 0
+            let positionWidth = lastFretWidth
             // console.log("this", this["fr" + i])
             for (var e = 0; e < frets + 1; e += 1) {
-                
-                drawNote(
-                    noteColor,
-                    positionHeigth,
-                    positionWidth,
-                    fretSizes[0][e],
-                    fretHeigth,
-                    lastFretWidth - 3
-                )
+                if(e === 0){
+                    drawNote(
+                        noteColor,
+                        positionHeigth,
+                        positionWidth + (lastFretWidth - 4 ),
+                        fretSizes[0][e],
+                        fretHeigth,
+                        lastFretWidth - 3
+                    )
+                }
+                else{
+                    drawNote(
+                        noteColor,
+                        positionHeigth,
+                        positionWidth,
+                        fretSizes[0][e],
+                        fretHeigth,
+                        lastFretWidth - 3
+                    )  
+                }
+               
 
                 positionWidth += fretSizes[0][e]
             }

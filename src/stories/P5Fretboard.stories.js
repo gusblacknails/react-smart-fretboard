@@ -22,6 +22,6 @@ const Template = (args) => {
 
 export const Frets = Template.bind({});
 Frets.args = {
-  numberOfFrets: 20,
+  numberOfFrets: 23,
   label: 'frets',
 };
