@@ -16,7 +16,7 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
     // fretboardWidth = window.innerWidth
     // const fretboardWidth = '1500'
     const [fretboardWidth, setFretboardWidth] = useState(1500);
-    const numberOfStrings = 6
+    const numberOfStrings = 3
     const stringSpinColor = "#E9E3DF"
     const firstStringsSpinColor = "#A6A6A6"
     const stringSpinShadow = "#222222"
@@ -70,7 +70,6 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
         fretSizes[0].forEach (function(numero){
             correctFretboardSize += numero;
         });
-         
         p5.createCanvas(
             correctFretboardSize + fretSizes[0][fretSizes[0].length - 1] ,
             fretboardHeigth
@@ -85,7 +84,7 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
     }
     
     let draw = p5 => {
-     
+
         function drawFret(
             x,
             y,
@@ -96,11 +95,7 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
             nutColor,
             fretsColor
         ) {
-            // FRET SQUARES
-            // p5.noStroke()
-            // p5.fill(255, 204, 0)
-            // p5.rect(y, z, x, fretHeigth)
-
+           
             //INSTRUMENT FRETS
             let shadow = p5.color("black")
             shadow.setAlpha(100)
@@ -113,8 +108,9 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
             if (fretNumber === 0) {
                 
                 
-                p5.fill('white')
-                p5.rect(y - fretSizes[0][fretSizes[0].length - 1], 0, fretSizes[0][fretSizes[0].length -1], fretboardHeigth)
+                // p5.fill('white')
+                // p5.rect(fretSizes[0][0], 0, 3, fretboardHeigth)
+                
                 p5.fill(nutColor)
                 p5.rect(y , 0, 10, fretboardHeigth)
               
@@ -236,26 +232,33 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
         positionHeigth = fretHeigth
         for (var i = 0; i < numberOfStrings; i += 1) {
             let positionWidth = lastFretWidth
+            let noteRadious
             // console.log("this", this["fr" + i])
+            if (fretHeigth > lastFretWidth) {
+                noteRadious = lastFretWidth
+            }else{
+                noteRadious = fretHeigth
+            }
             for (var e = 0; e < frets + 1; e += 1) {
                 if(e === 0){
                     drawNote(
                         noteColor,
                         positionHeigth,
-                        positionWidth + (lastFretWidth - 4 ),
+                        lastFretWidth*1.5,
                         fretSizes[0][e],
                         fretHeigth,
-                        lastFretWidth - 3
+                        noteRadious
                     )
                 }
                 else{
+                    
                     drawNote(
                         noteColor,
                         positionHeigth,
                         positionWidth,
                         fretSizes[0][e],
                         fretHeigth,
-                        lastFretWidth - 3
+                        noteRadious 
                     )  
                 }
                
