@@ -16,14 +16,16 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
     // fretboardWidth = window.innerWidth
     // const fretboardWidth = '1500'
     const [fretboardWidth, setFretboardWidth] = useState(1500);
-    const numberOfStrings = 3
+    const numberOfStrings = 6
     const stringSpinColor = "#E9E3DF"
     const firstStringsSpinColor = "#A6A6A6"
     const stringSpinShadow = "#222222"
     const nutColor = "#E3E5E5"
+    const nutWidth = 10
     const fretsColor = "#A6A6A6"
     const noteColor = "gray"
     const electricGuitarStrings = true
+    const ParentBackgroundColor = "white";
     const neckColor = "#534441"
     const tuning = ["e", "b", "g", "d", "a", "e"]
     const notes = []
@@ -84,7 +86,7 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
     }
     
     let draw = p5 => {
-
+        
         function drawFret(
             x,
             y,
@@ -112,7 +114,7 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
                 // p5.rect(fretSizes[0][0], 0, 3, fretboardHeigth)
                 
                 p5.fill(nutColor)
-                p5.rect(y , 0, 10, fretboardHeigth)
+                p5.rect(y , 0, nutWidth, fretboardHeigth)
               
             } else {
                 p5.fill(fretsColor)
@@ -166,6 +168,8 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
 
         // NOTE: Do not use setState in draw function or in functions that is executed in draw function... pls use normal variables or class properties for this purposes
         function fretboardDraw(){
+            // p5.triangle(100, 100, 100, 100, 100, 100);
+            p5.translate(nutWidth,0)
             let positionHeigth = fretHeigth
 
             for (var i = 0; i < numberOfStrings; i += 1) {
@@ -200,14 +204,14 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
 
         }
         fretboardDraw()
-      
+        
 
         let positionHeigth = fretHeigth
         //INSTRUMENT STRINGS
         for (var i = 0; i < numberOfStrings; i += 1) {
             p5.fill(stringSpinShadow)
             p5.rect(
-                0,
+                0 - nutWidth,
                 positionHeigth - fretHeigth / 2,
                 fretboardWidth,
                 1 + i / 3
@@ -216,24 +220,29 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
                 if (i > 1) {
                     for (var spin = 0; spin < scale; spin += 1.2) {
                         p5.fill(stringSpinColor)
-                        p5.rect(spin, positionHeigth - fretHeigth / 2, 1, 1 + i / 3)
+                        p5.rect(spin - nutWidth, positionHeigth - fretHeigth / 2, 1, 1 + i / 3)
                     }
                 } else {
                     for (var spin = 0; spin < scale; spin += 1.1) {
                         p5.fill(firstStringsSpinColor)
-                        p5.rect(spin, positionHeigth - fretHeigth / 2, 1, 1 + i / 3)
+                        p5.rect(spin - nutWidth, positionHeigth - fretHeigth / 2, 1, 1 + i / 3)
                     }
                 }
             }
 
             positionHeigth += fretHeigth
         }
+        // fretboard angle
+        p5.fill(ParentBackgroundColor)
+        p5.triangle(0 - nutWidth, 10, 0 - nutWidth, 0, fretboardWidth, 0);
+        p5.translate(0, fretboardHeigth)
+        p5.triangle(0 -nutWidth, -10, 0 - nutWidth, 0, fretboardWidth, 0);
+        p5.translate(0, -fretboardHeigth)
 
         positionHeigth = fretHeigth
         for (var i = 0; i < numberOfStrings; i += 1) {
             let positionWidth = lastFretWidth
             let noteRadious
-            // console.log("this", this["fr" + i])
             if (fretHeigth > lastFretWidth) {
                 noteRadious = lastFretWidth
             }else{
@@ -244,8 +253,8 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
                     drawNote(
                         noteColor,
                         positionHeigth,
-                        lastFretWidth*1.5,
-                        fretSizes[0][e],
+                        positionWidth ,
+                        fretSizes[0][e]/2,
                         fretHeigth,
                         noteRadious
                     )
@@ -269,6 +278,7 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
             positionHeigth += fretHeigth
         }
         
+       
         console.log("SIZE:", fretboardWidth, fretSizes[1])
        
     }
