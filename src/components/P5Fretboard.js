@@ -12,7 +12,8 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
     
     const fretboardHeigth = 200
     const [fretboardWidth, setFretboardWidth] = useState(window.innerWidth);
-    const [numberOfStrings, setNumberOfStrings] = useState(6);
+    const tuning = ["E", "B", "G", "D", "A", "E"]
+    const numberOfStrings= tuning.length
     const [frets, setFrets] = useState(numberOfFrets);
     const stringSpinColor = "#E9E3DF"
     const [isFlat, setIsFlat] = useState(true);
@@ -25,7 +26,6 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
     const electricGuitarStrings = true
     const ParentBackgroundColor = "white";
     const neckColor = "#534441"
-    const tuning = ["E", "B", "G", "D", "A", "E"]
     const chromaticScaleSharp = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
     const chromaticScaleFlat = [ "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"]
     let lastFretWidth
@@ -37,19 +37,7 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
     const fretboardScale = parseFloat(sc)
     const magic = parseFloat(mn)
     const fretHeigth = fretboardHeigth / numberOfStrings
-    // useEffect(() => {
-    //     setFrets(numberOfFrets)
-    //     fretSizes = fretSizeCalculator(fretboardScale, magic, frets)
-    //     setFretboardWidth(fretSizes[1])
-    //     console.log("2st fretboardWidth:", fretboardWidth)
-            
-        
-    //     console.log("ARGS:", numberOfFrets, frets, fretSizes[1])
-    // }, [numberOfFrets])
-    useEffect(() => {
-        
-       
-     }, [])
+  
     
     const fretSizeCalculator = (fretboardScale, magic_constant, frets) => {
      
@@ -67,31 +55,39 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
     }
     let fretSizes = fretSizeCalculator(fretboardScale, magic, frets)
     
-    const chromaticArray = (tuning, numberOfStrings, frets) => {
+    const chromaticNotesByString = (tuning, numberOfStrings, frets) => {
         let chromaticScale
-        if(isFlat){
-            chromaticScale= chromaticScaleFlat
-        }else{
-            chromaticScale= chromaticScaleSharp
-        }
+        let chromaticArray = []
+        chromaticScale = isFlat ? chromaticScaleFlat : chromaticScaleSharp    
         for(let i = 0; i<numberOfStrings; i++){
+            
             let stringArray = []
-            console.log(tuning[i])
+            while(chromaticScale[0]!==tuning[i]){
+                chromaticScale.push(chromaticScale.shift());
+                
+            }
+            
             for(let e = 0; e<=frets; e++){
-
-               
-
+                if(chromaticScale[e]!=undefined){
+                    stringArray.push(chromaticScale[e])  
+                }
+                else{
+                    console.log(e % chromaticScale.length)
+                    stringArray.push(chromaticScale[(e % chromaticScale.length)])  
+                }
             } 
-            console.log(stringArray)
-
+            chromaticArray.push(stringArray)
+    
         }
+        console.log( chromaticArray)
+        return chromaticArray
 
     }
     const notesPerString = (scale, rootNote, tuning, numberOfStrings, frets) => {
         let scaleInfo = Scale.get(`${rootNote} ${scale}`)
         let notesArray = []
         console.log("SCALE:", scaleInfo)
-        let chromatic = chromaticArray(tuning, numberOfStrings, frets)
+        let chromatic = chromaticNotesByString(tuning, numberOfStrings, frets)
         
     }
     notesPerString(scale, rootNote, tuning, numberOfStrings, frets)
@@ -133,10 +129,6 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
             // p5.noStroke()
 
             if (fretNumber === 0) {
-                
-                
-                // p5.fill('white')
-                // p5.rect(fretSizes[0][0], 0, 3, fretboardHeigth)
                 
                 p5.fill(nutColor)
                 p5.rect(y , 0, nutWidth, fretboardHeigth)
@@ -191,9 +183,7 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
             }
         }
 
-        // NOTE: Do not use setState in draw function or in functions that is executed in draw function... pls use normal variables or class properties for this purposes
         function fretboardDraw(){
-            // p5.triangle(100, 100, 100, 100, 100, 100);
             p5.translate(nutWidth,0)
             let positionHeigth = fretHeigth
 
@@ -259,9 +249,9 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
         }
         // fretboard angle
         p5.fill(ParentBackgroundColor)
-        p5.triangle(0 - nutWidth, 10, 0 - nutWidth, 0, fretboardWidth, 0);
+        p5.triangle(0 - nutWidth, 8, 0 - nutWidth, 0, fretboardWidth, 0);
         p5.translate(0, fretboardHeigth)
-        p5.triangle(0 -nutWidth, -10, 0 - nutWidth, 0, fretboardWidth, 0);
+        p5.triangle(0 -nutWidth, -8, 0 - nutWidth, 0, fretboardWidth, 0);
         p5.translate(0, -fretboardHeigth)
 
         positionHeigth = fretHeigth
