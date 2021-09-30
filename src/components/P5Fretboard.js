@@ -6,18 +6,16 @@ import React from "react"
 import { useState, useEffect } from "react"
 import PropTypes from 'prop-types';
 import Sketch from "react-p5"
+import { Scale } from "@tonaljs/tonal";
 
 const Fretboard = ({props,numberOfFrets, ...args}) =>{
-    const [frets, setFrets] = useState(numberOfFrets);
-   
-     // This will only run when one of those variables change
+    
     const fretboardHeigth = 200
-
-    // fretboardWidth = window.innerWidth
-    // const fretboardWidth = '1500'
-    const [fretboardWidth, setFretboardWidth] = useState(1500);
-    const numberOfStrings = 6
+    const [fretboardWidth, setFretboardWidth] = useState(window.innerWidth);
+    const [numberOfStrings, setNumberOfStrings] = useState(6);
+    const [frets, setFrets] = useState(numberOfFrets);
     const stringSpinColor = "#E9E3DF"
+    const [isFlat, setIsFlat] = useState(true);
     const firstStringsSpinColor = "#A6A6A6"
     const stringSpinShadow = "#222222"
     const nutColor = "#E3E5E5"
@@ -27,19 +25,21 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
     const electricGuitarStrings = true
     const ParentBackgroundColor = "white";
     const neckColor = "#534441"
-    const tuning = ["e", "b", "g", "d", "a", "e"]
-    const notes = []
+    const tuning = ["E", "B", "G", "D", "A", "E"]
+    const chromaticScaleSharp = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
+    const chromaticScaleFlat = [ "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"]
     let lastFretWidth
-
+    const [scale, setScale] = useState('major');
+    const [rootNote, setRootNote] = useState('Db4');
     const dots = true
     const sc = fretboardWidth
     const mn = 17.817
-    const scale = parseFloat(sc)
+    const fretboardScale = parseFloat(sc)
     const magic = parseFloat(mn)
     const fretHeigth = fretboardHeigth / numberOfStrings
     // useEffect(() => {
     //     setFrets(numberOfFrets)
-    //     fretSizes = fretSizeCalculator(scale, magic, frets)
+    //     fretSizes = fretSizeCalculator(fretboardScale, magic, frets)
     //     setFretboardWidth(fretSizes[1])
     //     console.log("2st fretboardWidth:", fretboardWidth)
             
@@ -50,13 +50,14 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
         
        
      }, [])
-    const fretSizeCalculator = (scale, magic_constant, frets) => {
+    
+    const fretSizeCalculator = (fretboardScale, magic_constant, frets) => {
      
         let fretMesures = []
-        let acumulatedFretSize = scale / magic_constant
+        let acumulatedFretSize = fretboardScale / magic_constant
         fretMesures.push(acumulatedFretSize)
         for(let i= 1; i<frets; i++) {
-            let mesure = (scale - acumulatedFretSize ) / magic_constant
+            let mesure = (fretboardScale - acumulatedFretSize ) / magic_constant
             fretMesures.push(mesure)
             acumulatedFretSize += mesure
         }
@@ -64,9 +65,37 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
         return  [ fretMesures, acumulatedFretSize ]
         
     }
-    let fretSizes = fretSizeCalculator(scale, magic, frets)
+    let fretSizes = fretSizeCalculator(fretboardScale, magic, frets)
     
-   
+    const chromaticArray = (tuning, numberOfStrings, frets) => {
+        let chromaticScale
+        if(isFlat){
+            chromaticScale= chromaticScaleFlat
+        }else{
+            chromaticScale= chromaticScaleSharp
+        }
+        for(let i = 0; i<numberOfStrings; i++){
+            let stringArray = []
+            console.log(tuning[i])
+            for(let e = 0; e<=frets; e++){
+
+               
+
+            } 
+            console.log(stringArray)
+
+        }
+
+    }
+    const notesPerString = (scale, rootNote, tuning, numberOfStrings, frets) => {
+        let scaleInfo = Scale.get(`${rootNote} ${scale}`)
+        let notesArray = []
+        console.log("SCALE:", scaleInfo)
+        let chromatic = chromaticArray(tuning, numberOfStrings, frets)
+        
+    }
+    notesPerString(scale, rootNote, tuning, numberOfStrings, frets)
+
     let setup = (p5, canvasParentRef) => {
         let correctFretboardSize = 0
         fretSizes[0].forEach (function(numero){
@@ -76,12 +105,8 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
             correctFretboardSize + fretSizes[0][fretSizes[0].length - 1] ,
             fretboardHeigth
         ).parent(canvasParentRef) // use parent to render canvas in this ref (without that p5 render this canvas outside your component)
-        
         p5.background(neckColor)
-
         p5.noLoop()
-        // p5.translate(1000,0)
-        
         
     }
     
@@ -218,12 +243,12 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
             )
             if (electricGuitarStrings) {
                 if (i > 1) {
-                    for (var spin = 0; spin < scale; spin += 1.2) {
+                    for (var spin = 0; spin < fretboardScale; spin += 1.2) {
                         p5.fill(stringSpinColor)
                         p5.rect(spin - nutWidth, positionHeigth - fretHeigth / 2, 1, 1 + i / 3)
                     }
                 } else {
-                    for (var spin = 0; spin < scale; spin += 1.1) {
+                    for (var spin = 0; spin < fretboardScale; spin += 1.1) {
                         p5.fill(firstStringsSpinColor)
                         p5.rect(spin - nutWidth, positionHeigth - fretHeigth / 2, 1, 1 + i / 3)
                     }
@@ -240,7 +265,7 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
         p5.translate(0, -fretboardHeigth)
 
         positionHeigth = fretHeigth
-        for (var i = 0; i < numberOfStrings; i += 1) {
+        for (var i = 0; i < numberOfStrings; i++) {
             let positionWidth = lastFretWidth
             let noteRadious
             if (fretHeigth > lastFretWidth) {
@@ -279,12 +304,8 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
         }
         
        
-        console.log("SIZE:", fretboardWidth, fretSizes[1])
-       
     }
   
-    
-
     
 return <Sketch setup={setup} draw={draw} style={{textAlign: 'center'}} />
     
