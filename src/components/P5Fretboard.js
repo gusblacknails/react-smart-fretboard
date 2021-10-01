@@ -56,9 +56,8 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
     let fretSizes = fretSizeCalculator(fretboardScale, magic, frets)
     
     const chromaticNotesByString = (tuning, numberOfStrings, frets) => {
-        let chromaticScale
         let chromaticArray = []
-        chromaticScale = isFlat ? chromaticScaleFlat : chromaticScaleSharp    
+        let chromaticScale = isFlat ? chromaticScaleFlat : chromaticScaleSharp    
         for(let i = 0; i<numberOfStrings; i++){
             
             let stringArray = []
@@ -126,8 +125,7 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
             p5.strokeWeight(1)
             let squareColor = p5.color("black")
             squareColor.setAlpha(100)
-            // p5.noStroke()
-
+           
             if (fretNumber === 0) {
                 
                 p5.fill(nutColor)
@@ -220,7 +218,6 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
         }
         fretboardDraw()
         
-
         let positionHeigth = fretHeigth
         //INSTRUMENT STRINGS
         for (var i = 0; i < numberOfStrings; i += 1) {
