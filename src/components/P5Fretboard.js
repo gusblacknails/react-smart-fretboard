@@ -49,48 +49,56 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
             fretMesures.push(mesure)
             acumulatedFretSize += mesure
         }
-        
-        return  [ fretMesures, acumulatedFretSize ]
-        
+        return  [ fretMesures, acumulatedFretSize ]    
     }
     let fretSizes = fretSizeCalculator(fretboardScale, magic, frets)
-    
-    const chromaticNotesByString = (tuning, numberOfStrings, frets) => {
-        let chromaticArray = []
-        let chromaticScale = isFlat ? chromaticScaleFlat : chromaticScaleSharp    
-        for(let i = 0; i<numberOfStrings; i++){
-            
-            let stringArray = []
+    const shiftedChromaticScale = () => {
+        let chromaticScale = isFlat ? chromaticScaleFlat : chromaticScaleSharp 
+        for(let i = 0; i<numberOfStrings; i++){  
+
             while(chromaticScale[0]!==tuning[i]){
-                chromaticScale.push(chromaticScale.shift());
-                
+                chromaticScale.push(chromaticScale.shift());  
             }
-            
+        }
+        return chromaticScale    
+    
+    }
+    const shifted = shiftedChromaticScale() 
+    const chromaticNotesPerString = (numberOfStrings, frets, shifted) => {
+        let chromaticArray = []   
+     
+        for(let i = 0; i<numberOfStrings; i++){
+            let stringArray = []
             for(let e = 0; e<=frets; e++){
-                if(chromaticScale[e]!=undefined){
-                    stringArray.push(chromaticScale[e])  
-                }
-                else{
-                    console.log(e % chromaticScale.length)
-                    stringArray.push(chromaticScale[(e % chromaticScale.length)])  
-                }
+                shifted[e]!=undefined ? stringArray.push(shifted[e])  : stringArray.push(shifted[(e % shifted.length)]) 
             } 
             chromaticArray.push(stringArray)
-    
         }
-        console.log( chromaticArray)
         return chromaticArray
 
     }
-    const notesPerString = (scale, rootNote, tuning, numberOfStrings, frets) => {
+    const notesPerString = (scale, rootNote, tuning, numberOfStrings, frets, shifted) => {
         let scaleInfo = Scale.get(`${rootNote} ${scale}`)
         let notesArray = []
-        console.log("SCALE:", scaleInfo)
-        let chromatic = chromaticNotesByString(tuning, numberOfStrings, frets)
+        let cleanNotes = scaleInfo.notes.map( note => { 
+            return note.substring(0, note.length - 1)}) 
+        let chromatic = chromaticNotesPerString(tuning, numberOfStrings, frets, shifted)
+        console.log("chromatic:", chromatic)
+        let chromaticArray = []   
+        for(let i = 0; i<numberOfStrings; i++){
+            let stringArray = []
+
+            for(let e = 0; e<=frets; e++){
+
+                chromatic[e]!=undefined ? stringArray.push(chromatic[e])  : stringArray.push(chromatic[(e % chromatic.length)]) 
+
+            } 
+            chromaticArray.push(stringArray)
+        }
+        
         
     }
     notesPerString(scale, rootNote, tuning, numberOfStrings, frets)
-
     let setup = (p5, canvasParentRef) => {
         let correctFretboardSize = 0
         fretSizes[0].forEach (function(numero){
@@ -104,9 +112,7 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
         p5.noLoop()
         
     }
-    
     let draw = p5 => {
-        
         function drawFret(
             x,
             y,
@@ -180,7 +186,6 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
                 )
             }
         }
-
         function fretboardDraw(){
             p5.translate(nutWidth,0)
             let positionHeigth = fretHeigth
@@ -272,7 +277,6 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
                     )
                 }
                 else{
-                    
                     drawNote(
                         noteColor,
                         positionHeigth,
@@ -282,21 +286,16 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
                         noteRadious 
                     )  
                 }
-               
-
                 positionWidth += fretSizes[0][e]
             }
-
             positionHeigth += fretHeigth
-        }
-        
-       
+        }    
     }
   
     
-return <Sketch setup={setup} draw={draw} style={{textAlign: 'center'}} />
-    
+return <Sketch setup={setup} draw={draw} style={{textAlign: 'center'}} />    
 }
+
 Fretboard.propTypes = {
     numberOfFrets: PropTypes.number
 }
