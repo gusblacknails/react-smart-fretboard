@@ -1,6 +1,6 @@
 # react-smart-fretboard
 
-\*Still under development
+*Still under development
 
 Reusable react component for generating an stringed instruments fretboard for any number of strings, frets or tuning type. Integrated with TonalJS in order to show scales, arpeggios, triads and chords.
 
@@ -13,7 +13,7 @@ Completed Milestones:
 
 Uncompleted Milestones:
 
-- Double string for simulating instruments like cuban tres, 12 string guitar ...
+- Double string option for simulating instruments like cuban tres, 12 string guitar ...
 - TonalJS integration.
 - Tests
 - Prepare for npm package

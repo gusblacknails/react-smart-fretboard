@@ -30,7 +30,7 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
     const chromaticScaleFlat = [ "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"]
     let lastFretWidth
     const [scale, setScale] = useState('major');
-    const [rootNote, setRootNote] = useState('Db4');
+    const [rootNote, setRootNote] = useState('D4');
     const dots = true
     const sc = fretboardWidth
     const mn = 17.817
@@ -54,16 +54,21 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
     let fretSizes = fretSizeCalculator(fretboardScale, magic, frets)
     const shiftedChromaticScale = () => {
         let chromaticScale = isFlat ? chromaticScaleFlat : chromaticScaleSharp 
+        let stringsArray= []
         for(let i = 0; i<numberOfStrings; i++){  
-
+            
             while(chromaticScale[0]!==tuning[i]){
-                chromaticScale.push(chromaticScale.shift());  
+                chromaticScale.push(chromaticScale.shift()); 
+
             }
+              
+            stringsArray.push(chromaticScale.slice(0) )
         }
-        return chromaticScale    
-    
+        
+        return stringsArray
     }
-    const shifted = shiftedChromaticScale() 
+    let shifted = shiftedChromaticScale() 
+    
     const chromaticNotesPerString = (numberOfStrings, frets, shifted) => {
         let chromaticArray = []   
      
@@ -77,28 +82,44 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
         return chromaticArray
 
     }
-    const notesPerString = (scale, rootNote, tuning, numberOfStrings, frets, shifted) => {
+    const notesPerString = (scale, rootNote,  numberOfStrings, frets, shifted) => {
         let scaleInfo = Scale.get(`${rootNote} ${scale}`)
+        console.log(Scale.names())
         let notesArray = []
         let cleanNotes = scaleInfo.notes.map( note => { 
-            return note.substring(0, note.length - 1)}) 
-        let chromatic = chromaticNotesPerString(tuning, numberOfStrings, frets, shifted)
-        console.log("chromatic:", chromatic)
-        let chromaticArray = []   
+            return note.substring(0, note.length - 1)
+        }) 
+        let chromatic = chromaticNotesPerString( numberOfStrings, frets, shifted)
+        let scaleOnFretboard = []  
+       
         for(let i = 0; i<numberOfStrings; i++){
             let stringArray = []
-
+           
             for(let e = 0; e<=frets; e++){
-
-                chromatic[e]!=undefined ? stringArray.push(chromatic[e])  : stringArray.push(chromatic[(e % chromatic.length)]) 
+               let notFound = true
+                cleanNotes.forEach((note)=>{
+                        if(notFound){
+                            if(note===chromatic[0][i][e] || note===chromatic[0][i][(e % chromatic[0][i].length)] ){
+                                chromatic[0][i][e]!=undefined ? stringArray.push(chromatic[0][i][e])  : stringArray.push(chromatic[0][i][(e % chromatic[0][i].length)]) 
+                                notFound = false
+                            }
+                        }
+                              
+                })
+                
+                if(notFound){
+                    stringArray.push(null)
+                }
 
             } 
-            chromaticArray.push(stringArray)
+            scaleOnFretboard.push(stringArray.slice(0))
+            
         }
-        
+        console.log(scaleOnFretboard)
+        return scaleOnFretboard
         
     }
-    notesPerString(scale, rootNote, tuning, numberOfStrings, frets)
+    notesPerString(scale, rootNote,  numberOfStrings, frets, shifted)
     let setup = (p5, canvasParentRef) => {
         let correctFretboardSize = 0
         fretSizes[0].forEach (function(numero){
