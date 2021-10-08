@@ -16,7 +16,7 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
     const numberOfStrings= tuning.length
     const [frets, setFrets] = useState(numberOfFrets);
     const stringSpinColor = "#E9E3DF"
-    const [isFlat, setIsFlat] = useState(true);
+    let isFlat = true;
     const firstStringsSpinColor = "#A6A6A6"
     const stringSpinShadow = "#222222"
     const nutColor = "#E3E5E5"
@@ -29,8 +29,8 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
     const chromaticScaleSharp = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
     const chromaticScaleFlat = [ "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"]
     let lastFretWidth
-    const [scale, setScale] = useState('major');
-    const [rootNote, setRootNote] = useState('D4');
+    const [scale, setScale] = useState('bebop');
+    const [rootNote, setRootNote] = useState('C#4');
     const dots = true
     const sc = fretboardWidth
     const mn = 17.817
@@ -53,6 +53,12 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
     }
     let fretSizes = fretSizeCalculator(fretboardScale, magic, frets)
     const shiftedChromaticScale = () => {
+        if (rootNote[1]==="b"){
+            isFlat =true
+        }
+        if (rootNote[1]==="#"){
+            isFlat =false
+        }
         let chromaticScale = isFlat ? chromaticScaleFlat : chromaticScaleSharp 
         let stringsArray= []
         for(let i = 0; i<numberOfStrings; i++){  
@@ -71,7 +77,7 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
     
     const chromaticNotesPerString = (numberOfStrings, frets, shifted) => {
         let chromaticArray = []   
-     
+        
         for(let i = 0; i<numberOfStrings; i++){
             let stringArray = []
             for(let e = 0; e<=frets; e++){
@@ -82,11 +88,50 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
         return chromaticArray
 
     }
+    const cleanDoubleAccidentals = (note) => {
+        
+        if(note.length === 2) {
+            return note
+        }
+        if(note.length === 3){
+            if(note[0]==="E" && note[1] === "#"){
+                note = `F${note[note.length - 1]}`
+            }
+            if(note[0]==="B" && note[1] === "#"){
+
+                note = `C${note[note.length - 1]}`
+            }
+            if(note[0]==="F" && note[1] === "b"){
+                note = `E${note[note.length - 1]}`
+            }
+            if(note[0]==="C" && note[1] === "b"){
+
+                note = `B${note[note.length - 1]}`
+            }
+            console.log(note, 3)
+            return note
+
+        }
+        if(note.length === 4){
+            console.log(note, 4)
+        }
+    }
     const notesPerString = (scale, rootNote,  numberOfStrings, frets, shifted) => {
+        function capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+          }
+        rootNote =  capitalizeFirstLetter(rootNote) 
         let scaleInfo = Scale.get(`${rootNote} ${scale}`)
-        console.log(Scale.names())
+        let notesWithoutDoubleAccidentals =  []
+        scaleInfo.notes.forEach( (note) => {
+           
+            note = cleanDoubleAccidentals(note)
+            notesWithoutDoubleAccidentals.push(note)
+           
+        })
+        console.log("scaleInfo:",notesWithoutDoubleAccidentals)
         let notesArray = []
-        let cleanNotes = scaleInfo.notes.map( note => { 
+        let cleanNotes = notesWithoutDoubleAccidentals.map( note => { 
             return note.substring(0, note.length - 1)
         }) 
         let chromatic = chromaticNotesPerString( numberOfStrings, frets, shifted)
@@ -116,6 +161,7 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
             
         }
         console.log(scaleOnFretboard)
+
         return scaleOnFretboard
         
     }
@@ -321,8 +367,7 @@ Fretboard.propTypes = {
     numberOfFrets: PropTypes.number
 }
 Fretboard.defaultProps = {
-    numberOfFrets: 23,
-    
+    numberOfFrets: 23, 
   };
 export default Fretboard
 
