@@ -11,7 +11,7 @@ import { Scale } from "@tonaljs/tonal";
 const Fretboard = ({props,numberOfFrets, ...args}) =>{
     
     const fretboardHeigth = 200
-    const [fretboardWidth, setFretboardWidth] = useState(window.innerWidth);
+    const [fretboardWidth, setFretboardWidth] = useState(1500);
     const tuning = ["E", "B", "G", "D", "A", "E"]
     const numberOfStrings= tuning.length
     const [frets, setFrets] = useState(numberOfFrets);
@@ -28,9 +28,10 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
     const neckColor = "#534441"
     const chromaticScaleSharp = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
     const chromaticScaleFlat = [ "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"]
+    const scaleWithoutAccidentals = ["C", "D", "E", "F", "G", "A", "B"]
     let lastFretWidth
-    const [scale, setScale] = useState('bebop');
-    const [rootNote, setRootNote] = useState('C#4');
+    const [scale, setScale] = useState('minor pentatonic');
+    const [rootNote, setRootNote] = useState('a4');
     const dots = true
     const sc = fretboardWidth
     const mn = 17.817
@@ -45,7 +46,7 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
         let acumulatedFretSize = fretboardScale / magic_constant
         fretMesures.push(acumulatedFretSize)
         for(let i= 1; i<frets; i++) {
-            let mesure = (fretboardScale - acumulatedFretSize ) / magic_constant
+            const mesure = (fretboardScale - acumulatedFretSize ) / magic_constant
             fretMesures.push(mesure)
             acumulatedFretSize += mesure
         }
@@ -108,12 +109,28 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
 
                 note = `B${note[note.length - 1]}`
             }
-            console.log(note, 3)
             return note
 
         }
         if(note.length === 4){
-            console.log(note, 4)
+            if (note[1] === "b" && note[2] === "b"){
+                for( let e = 0; e<= scaleWithoutAccidentals.length; e++){
+                    if( note[0]===scaleWithoutAccidentals[e] || note[0]===scaleWithoutAccidentals[e % scaleWithoutAccidentals.length]){
+                        return scaleWithoutAccidentals[(e % scaleWithoutAccidentals.length) - 1] + note[note.length - 1]
+                    }
+                    
+                }
+            }
+            if (note[1] === "#" && note[2] === "#"){
+                for( let e = 0; e<= scaleWithoutAccidentals.length; e++){
+                    if( note[0]===scaleWithoutAccidentals[e] || note[0]===scaleWithoutAccidentals[e % scaleWithoutAccidentals.length]){
+                        return scaleWithoutAccidentals[(e % scaleWithoutAccidentals.length) + 1] + note[note.length - 1]
+                    }
+                    
+                }
+
+            }
+            
         }
     }
     const notesPerString = (scale, rootNote,  numberOfStrings, frets, shifted) => {
@@ -121,7 +138,7 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
             return string.charAt(0).toUpperCase() + string.slice(1);
           }
         rootNote =  capitalizeFirstLetter(rootNote) 
-        let scaleInfo = Scale.get(`${rootNote} ${scale}`)
+        const scaleInfo = Scale.get(`${rootNote} ${scale}`)
         let notesWithoutDoubleAccidentals =  []
         scaleInfo.notes.forEach( (note) => {
            
@@ -129,9 +146,8 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
             notesWithoutDoubleAccidentals.push(note)
            
         })
-        console.log("scaleInfo:",notesWithoutDoubleAccidentals)
         let notesArray = []
-        let cleanNotes = notesWithoutDoubleAccidentals.map( note => { 
+        const cleanNotes = notesWithoutDoubleAccidentals.map( note => { 
             return note.substring(0, note.length - 1)
         }) 
         let chromatic = chromaticNotesPerString( numberOfStrings, frets, shifted)
@@ -160,12 +176,13 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
             scaleOnFretboard.push(stringArray.slice(0))
             
         }
-        console.log(scaleOnFretboard)
 
         return scaleOnFretboard
         
     }
-    notesPerString(scale, rootNote,  numberOfStrings, frets, shifted)
+    
+    let scaleOnFretboard = notesPerString(scale, rootNote,  numberOfStrings, frets, shifted)
+    console.log(scaleOnFretboard)
     let setup = (p5, canvasParentRef) => {
         let correctFretboardSize = 0
         fretSizes[0].forEach (function(numero){
@@ -190,8 +207,7 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
             nutColor,
             fretsColor
         ) {
-           
-            //INSTRUMENT FRETS
+
             let shadow = p5.color("black")
             shadow.setAlpha(100)
             p5.stroke(shadow)
@@ -334,24 +350,30 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
             }
             for (var e = 0; e < frets + 1; e += 1) {
                 if(e === 0){
-                    drawNote(
-                        noteColor,
-                        positionHeigth,
-                        positionWidth ,
-                        fretSizes[0][e]/2,
-                        fretHeigth,
-                        noteRadious
-                    )
+                    if(scaleOnFretboard[i][0]){
+                        drawNote(
+                            noteColor,
+                            positionHeigth,
+                            positionWidth ,
+                            fretSizes[0][e]/2,
+                            fretHeigth,
+                            noteRadious
+                        )
+                    }
+                 
                 }
                 else{
-                    drawNote(
-                        noteColor,
-                        positionHeigth,
-                        positionWidth,
-                        fretSizes[0][e],
-                        fretHeigth,
-                        noteRadious 
-                    )  
+                    if(scaleOnFretboard[i][e]){
+                        drawNote(
+                            noteColor,
+                            positionHeigth,
+                            positionWidth,
+                            fretSizes[0][e],
+                            fretHeigth,
+                            noteRadious 
+                        )  
+                    }
+                   
                 }
                 positionWidth += fretSizes[0][e]
             }
