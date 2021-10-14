@@ -20,6 +20,7 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
     const firstStringsSpinColor = "#A6A6A6"
     const stringSpinShadow = "#222222"
     const nutColor = "#E3E5E5"
+    const tonicColor = "orange"
     const nutWidth = 10
     const fretsColor = "#A6A6A6"
     const noteColor = "gray"
@@ -30,7 +31,7 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
     const chromaticScaleFlat = [ "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"]
     const scaleWithoutAccidentals = ["C", "D", "E", "F", "G", "A", "B"]
     let lastFretWidth
-    const [scale, setScale] = useState('minor pentatonic');
+    const [scale, setScale] = useState('blues');
     const [rootNote, setRootNote] = useState('a4');
     const dots = true
     const sc = fretboardWidth
@@ -340,6 +341,7 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
         p5.translate(0, -fretboardHeigth)
 
         positionHeigth = fretHeigth
+        
         for (var i = 0; i < numberOfStrings; i++) {
             let positionWidth = lastFretWidth
             let noteRadious
@@ -349,10 +351,17 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
                 noteRadious = fretHeigth
             }
             for (var e = 0; e < frets + 1; e += 1) {
+                let color = noteColor
                 if(e === 0){
+                    
                     if(scaleOnFretboard[i][0]){
+                        console.log(scaleOnFretboard[i][0], rootNote[0])
+                        
+                        if(scaleOnFretboard[i][e].toLowerCase()===rootNote[0]){
+                            color = tonicColor
+                        }
                         drawNote(
-                            noteColor,
+                            color,
                             positionHeigth,
                             positionWidth ,
                             fretSizes[0][e]/2,
@@ -364,8 +373,12 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
                 }
                 else{
                     if(scaleOnFretboard[i][e]){
+                        
+                        if(scaleOnFretboard[i][e].toLowerCase()===rootNote[0]){
+                            color = tonicColor
+                        }
                         drawNote(
-                            noteColor,
+                            color,
                             positionHeigth,
                             positionWidth,
                             fretSizes[0][e],
