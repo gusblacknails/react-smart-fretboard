@@ -199,10 +199,7 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
     }
     let draw = p5 => {
         function drawFret(
-            x,
             y,
-            z,
-            fretHeigth,
             fretboardHeigth,
             fretNumber,
             nutColor,
@@ -238,14 +235,30 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
             positionWidth,
             fretWidth,
             fretHeigth,
-            lastFretWidth
-        ) {
+            lastFretWidth,
+            noteName
+        ) { 
+            let x, y
+            if (noteName.length > 1){
+                x = (positionWidth - fretWidth / 2) - 9.5
+                y = (positionHeigth - fretHeigth / 2 ) + 6
+            }
+            else{
+                x = (positionWidth - fretWidth / 2) - 5
+                y = (positionHeigth - fretHeigth / 2 ) + 6
+            }
+
+
+
             p5.fill(noteColor)
             p5.circle(
                 positionWidth - fretWidth / 2 + 1,
                 positionHeigth - fretHeigth / 2,
                 lastFretWidth
             )
+            p5.fill("white")
+            p5.textSize(18);
+            p5.text(noteName, x , y);
         }
         function drawDots(fretboardHeigth, fretNumber, positionWidth, fretWidth) {
             if (
@@ -282,10 +295,7 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
                 for (var e = 0; e < frets; e++) {
                     lastFretWidth = fretSizes[0][e]
                     drawFret(
-                        fretSizes[0][e],
                         positionWidth ,
-                        positionHeigth,
-                        fretHeigth,
                         fretboardHeigth,
                         fretNumber,
                         nutColor,
@@ -366,7 +376,8 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
                             positionWidth ,
                             fretSizes[0][e]/2,
                             fretHeigth,
-                            noteRadious
+                            noteRadious,
+                            scaleOnFretboard[i][0]
                         )
                     }
                  
@@ -383,7 +394,8 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
                             positionWidth,
                             fretSizes[0][e],
                             fretHeigth,
-                            noteRadious 
+                            noteRadious,
+                            scaleOnFretboard[i][e] 
                         )  
                     }
                    
