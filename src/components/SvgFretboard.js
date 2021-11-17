@@ -184,7 +184,6 @@ const SvgFretboard = ({props,numberOfFrets, ...args}) =>{
     }
     
     let scaleOnFretboard = notesPerString(scale, rootNote,  numberOfStrings, frets, shifted)
-    console.log(scaleOnFretboard)
     
     function fretboardDraw(){
         let correctFretboardSize = 0

@@ -9,6 +9,8 @@ export default {
     component: IndexPage,
     argTypes: {
         numberOfFrets: { control: 'number' },
+        scale: {control: 'string'},
+        rootNote: { control: 'string'}
     },
   };
 const Template = (args) => {
@@ -17,7 +19,11 @@ const Template = (args) => {
 }
 
 export const Frets = Template.bind({});
+
 Frets.args = {
-  numberOfFrets: 19,
+  numberOfFrets: 20,
+  choosenScale: "minor",
+  // rootNote only works with minorCase
+  root: "cb4", 
   label: 'frets',
 };

@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import Sketch from "react-p5"
 import { Scale } from "@tonaljs/tonal";
 
-const Fretboard = ({props,numberOfFrets, ...args}) =>{
+const Fretboard = ({numberOfFrets, choosenScale, root}) =>{
     
     const fretboardHeigth = 200
     const [fretboardWidth, setFretboardWidth] = useState(1500);
@@ -31,8 +31,8 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
     const chromaticScaleFlat = [ "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"]
     const scaleWithoutAccidentals = ["C", "D", "E", "F", "G", "A", "B"]
     let lastFretWidth
-    const [scale, setScale] = useState('blues');
-    const [rootNote, setRootNote] = useState('a4');
+    const [scale, setScale] = useState(choosenScale);
+    let [rootNote, setRootNote] = useState(root);
     const dots = true
     const sc = fretboardWidth
     const mn = 17.817
@@ -55,11 +55,24 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
     }
     let fretSizes = fretSizeCalculator(fretboardScale, magic, frets)
     const shiftedChromaticScale = () => {
+        
         if (rootNote[1]==="b"){
             isFlat =true
         }
         if (rootNote[1]==="#"){
             isFlat =false
+        }
+        if (rootNote.length===2){
+            isFlat =true
+        }
+        if (rootNote[0].toLowerCase() === "e" || rootNote[0].toLowerCase() === "b"){
+            isFlat =false
+        }
+        if(rootNote[0].toLowerCase()=== "e" && rootNote[1] === "b"){
+            isFlat=true
+        }
+        if(rootNote[0].toLowerCase()=== "b" && rootNote[1] === "b"){
+            isFlat=true
         }
         let chromaticScale = isFlat ? chromaticScaleFlat : chromaticScaleSharp 
         let stringsArray= []
@@ -140,6 +153,7 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
           }
         rootNote =  capitalizeFirstLetter(rootNote) 
         const scaleInfo = Scale.get(`${rootNote} ${scale}`)
+        
         let notesWithoutDoubleAccidentals =  []
         scaleInfo.notes.forEach( (note) => {
            
@@ -147,7 +161,7 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
             notesWithoutDoubleAccidentals.push(note)
            
         })
-        let notesArray = []
+        
         const cleanNotes = notesWithoutDoubleAccidentals.map( note => { 
             return note.substring(0, note.length - 1)
         }) 
@@ -165,8 +179,7 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
                                 chromatic[0][i][e]!=undefined ? stringArray.push(chromatic[0][i][e])  : stringArray.push(chromatic[0][i][(e % chromatic[0][i].length)]) 
                                 notFound = false
                             }
-                        }
-                              
+                        }             
                 })
                 
                 if(notFound){
@@ -177,6 +190,7 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
             scaleOnFretboard.push(stringArray.slice(0))
             
         }
+       
 
         return scaleOnFretboard
         
@@ -241,11 +255,11 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
             let x, y
             if (noteName.length > 1){
                 x = (positionWidth - fretWidth / 2) - 9.5
-                y = (positionHeigth - fretHeigth / 2 ) + 6
+                y = (positionHeigth - fretHeigth / 2 ) + 7
             }
             else{
-                x = (positionWidth - fretWidth / 2) - 5
-                y = (positionHeigth - fretHeigth / 2 ) + 6
+                x = (positionWidth - fretWidth / 2) - 5.5
+                y = (positionHeigth - fretHeigth / 2 ) + 7
             }
 
 
@@ -365,10 +379,22 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
                 if(e === 0){
                     
                     if(scaleOnFretboard[i][0]){
-                        console.log(scaleOnFretboard[i][0], rootNote[0])
                         
+                        if(rootNote==="cb4"){
+                            rootNote='b4'
+                        }
+                        
+                        if(rootNote==="fb4"){
+                            rootNote='e4'
+                        }
                         if(scaleOnFretboard[i][e].toLowerCase()===rootNote[0]){
                             color = tonicColor
+                        }
+                        if(rootNote.length > 2) {
+                            
+                            if(scaleOnFretboard[i][e].toLowerCase()===rootNote[0] + rootNote[1]){
+                                color = tonicColor
+                            }
                         }
                         drawNote(
                             color,
@@ -387,6 +413,12 @@ const Fretboard = ({props,numberOfFrets, ...args}) =>{
                         
                         if(scaleOnFretboard[i][e].toLowerCase()===rootNote[0]){
                             color = tonicColor
+                        }
+                        if(rootNote.length > 2) {
+                            
+                            if(scaleOnFretboard[i][e].toLowerCase()===rootNote[0] + rootNote[1]){
+                                color = tonicColor
+                            }
                         }
                         drawNote(
                             color,
