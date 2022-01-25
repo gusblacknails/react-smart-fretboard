@@ -8,7 +8,7 @@ const IndexPage = ({...args}) => {
     return (
     <React.Fragment>
             <Fretboard {...args}/>
-            <SvgFretboard {...args}/>
+            {/* <SvgFretboard {...args}/> */}
     </React.Fragment>
    
         )

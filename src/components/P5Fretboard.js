@@ -8,13 +8,13 @@ import PropTypes from 'prop-types';
 import Sketch from "react-p5"
 import { Scale } from "@tonaljs/tonal";
 
-const Fretboard = ({numberOfFrets, choosenScale, root}) =>{
+const Fretboard = props =>{
     
     const fretboardHeigth = 200
     const [fretboardWidth, setFretboardWidth] = useState(1500);
     const tuning = ["E", "B", "G", "D", "A", "E"]
     const numberOfStrings= tuning.length
-    const [frets, setFrets] = useState(numberOfFrets);
+    const [frets, setFrets] = useState(props.numberOfFrets);
     const stringSpinColor = "#E9E3DF"
     let isFlat = true;
     const firstStringsSpinColor = "#A6A6A6"
@@ -31,8 +31,8 @@ const Fretboard = ({numberOfFrets, choosenScale, root}) =>{
     const chromaticScaleFlat = [ "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab", "A", "Bb", "B"]
     const scaleWithoutAccidentals = ["C", "D", "E", "F", "G", "A", "B"]
     let lastFretWidth
-    const [scale, setScale] = useState(choosenScale);
-    let [rootNote, setRootNote] = useState(root);
+    const [scale, setScale] = useState(props.choosenScale);
+    let [rootNote, setRootNote] = useState(props.root);
     const dots = true
     const sc = fretboardWidth
     const mn = 17.817
@@ -40,7 +40,12 @@ const Fretboard = ({numberOfFrets, choosenScale, root}) =>{
     const magic = parseFloat(mn)
     const fretHeigth = fretboardHeigth / numberOfStrings
   
-    
+    useEffect(() => {
+        setFrets(props.numberOfFrets);
+        
+        console.log(props.numberOfFrets)
+        return <Sketch setup={setup} draw={draw} style={{textAlign: 'center'}} /> 
+      }, [props]);
     const fretSizeCalculator = (fretboardScale, magic_constant, frets) => {
      
         let fretMesures = []
