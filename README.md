@@ -2,19 +2,23 @@
 ![alt text](https://github.com/gusblacknails/react-smart-fretboard/blob/main/react-smart-fretboard-guitar-example.png)
 *Still under development
 
-Reusable react component for generating an stringed instrument fretboard for any number of strings, frets or tuning type. Integrated with TonalJS in order to show scales, arpeggios, triads and chords.
+# React Fretboard Component
 
-Completed Milestones:
+A reusable React component designed to generate fretboards for stringed instruments with any number of strings, frets, or tuning types. Integrated with **Tonal.js** to visualize scales, arpeggios, triads, and chords.
 
-- Fretboard for any number of frets, strings.
-- Realistic fret sizes
-- Drawn note for each fret.
-- Chromatic array of notes for each string and number of frets. Flat or Sharp notes can be shown.
-- Fretboard shows scales from TonalJS
+## Completed Milestones
 
-Uncompleted Milestones:
+- Customizable fretboard for any number of frets and strings.
+- Realistic fret spacing.
+- Visual representation of notes on each fret.
+- Chromatic array of notes for each string based on fret count, with options to display flats or sharps.
+- Integration with Tonal.js to display scales.
 
-- Double string option for simulating instruments like cuban tres, 12 string guitar ...
-- TonalJS integration for arpeggios, triads and chords. Now only works for scales.
-- Tests
-- Prepare for npm package
+## Upcoming Milestones
+
+- Option for double-string courses, simulating instruments like the Cuban tres or 12-string guitar.
+- Tonal.js integration for arpeggios, triads, and chords (currently limited to scales).
+- Implementation of tests.
+- Preparation for npm package distribution.
+
+
